@@ -3,7 +3,18 @@ const morgan = require('morgan');
 const app = express();
 
 app.use(express.json());
-app.use(morgan('tiny'));
+
+morgan.token('personData', req => {
+	return JSON.stringify(req.body);
+});
+app.use(
+	morgan(
+		':method :url :status :res[content-length] :response-time ms :personData'
+	)
+);
+//:method :url :status :res[content-length] - :response-time ms
+//# will output
+//GET /tiny 200 2 - 0.188 ms
 
 let persons = [
 	{
@@ -28,17 +39,16 @@ let persons = [
 	},
 ];
 
-// morgan('tiny');
-//:method :url :status :res[content-length] - :response-time ms
-//# will output
-//GET /tiny 200 2 - 0.188 ms
+app.get('/info', (request, response) => {
+	const info = () => {
+		const currentDate = new Date();
+		return `<p>Phonebook has info for ${
+			persons.length
+		} people</p><p>${currentDate.toString()}</p>`;
+	};
 
-const info = () => {
-	const currentDate = new Date();
-	return `<p>Phonebook has info for ${
-		persons.length
-	} people</p><p>${currentDate.toString()}</p>`;
-};
+	response.send(info());
+});
 
 app.get('/', (request, response) => {
 	response.send('<h1>Hello World!</h1>');
@@ -46,10 +56,6 @@ app.get('/', (request, response) => {
 
 app.get('/api/persons', (request, response) => {
 	response.json(persons);
-});
-
-app.get('/info', (request, response) => {
-	response.send(info());
 });
 
 app.get('/api/persons/:id', (request, response) => {
@@ -69,7 +75,6 @@ const generateID = () => {
 
 app.post('/api/persons', (request, response) => {
 	const body = request.body;
-	console.log(body);
 
 	if (!body.name) {
 		return response.status(400).json({

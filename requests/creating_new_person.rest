@@ -1,6 +1,7 @@
-POST http://localhost:3001/api/persons
+POST http://localhost:3001/api/persons 
 Content-Type: application/json
 
 {
-  "content": "testing backends with the REST client",
+  "name": "FirstName LastName",
+  "number": "123-456-7890"
 }

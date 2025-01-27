@@ -63,12 +63,32 @@ const generateID = () => {
 app.post('/api/persons', (request, response) => {
 	const body = request.body;
 	console.log(body);
+
+	if (!body.name) {
+		return response.status(400).json({
+			error: 'Please enter a name',
+		});
+	}
+	if (!body.number) {
+		return response.status(400).json({
+			error: 'Please enter a number',
+		});
+	}
+
+	const existingNames = persons.map(person => person.name);
+	if (existingNames.includes(body.name)) {
+		return response.status(400).json({
+			error: `${body.name} already exists`,
+		});
+	}
+
 	const newPerson = {
 		name: body.name,
 		number: body.number,
 		id: generateID(),
 	};
 
+	console.log('new person is:');
 	console.log(newPerson);
 
 	persons = persons.concat(newPerson);

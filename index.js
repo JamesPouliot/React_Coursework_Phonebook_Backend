@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const app = express();
 
 app.use(express.json());
@@ -12,6 +13,8 @@ app.use(
 		':method :url :status :res[content-length] :response-time ms :personData'
 	)
 );
+
+app.use(cors());
 //:method :url :status :res[content-length] - :response-time ms
 //# will output
 //GET /tiny 200 2 - 0.188 ms
@@ -95,9 +98,9 @@ app.post('/api/persons', (request, response) => {
 	}
 
 	const newPerson = {
+		id: String(generateID()),
 		name: body.name,
 		number: body.number,
-		id: generateID(),
 	};
 
 	console.log('new person is:');
@@ -108,6 +111,13 @@ app.post('/api/persons', (request, response) => {
 	console.log(persons);
 
 	response.json(newPerson);
+});
+
+app.put('/api/persons/:id', (request, response) => {
+	const id = request.params.id;
+	const updatedPerson = request.body;
+	persons = persons.map(person => (person.id === id ? updatedPerson : person));
+	response.status(204).end();
 });
 
 app.delete('/api/persons/:id', (request, response) => {

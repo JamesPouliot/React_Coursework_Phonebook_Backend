@@ -1,7 +1,7 @@
-POST http://localhost:3001/api/persons 
+POST https://react-coursework-phonebook-backend.onrender.com/api/persons 
 Content-Type: application/json
 
 {
-  "name": "example Name",
-  "number": "123-456-7890"
+  "name": "another example Name",
+  "number": "-456-7890"
 }

@@ -2,8 +2,18 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const app = express();
+const requestLogger = (request, reponse, next) => {
+	console.log('Method', request.method);
+	console.log('Path', request.path);
+	console.log('Body', request.body);
+	console.log('---');
+	next();
+};
 
 app.use(express.json());
+app.use(express.static('dist'));
+app.use(requestLogger);
+app.use(cors());
 
 morgan.token('personData', req => {
 	return JSON.stringify(req.body);
@@ -14,7 +24,6 @@ app.use(
 	)
 );
 
-app.use(cors());
 //:method :url :status :res[content-length] - :response-time ms
 //# will output
 //GET /tiny 200 2 - 0.188 ms

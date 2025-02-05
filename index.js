@@ -114,6 +114,7 @@ app.post('/api/persons', (request, response) => {
 });
 
 app.put('/api/persons/:id', (request, response) => {
+	//NOTE -- I accidentally created this prematurely in Exercise 3.9. it does appear to work right now. But it might not be what they want!
 	const id = request.params.id;
 	const updatedPerson = request.body;
 	persons = persons.map(person => (person.id === id ? updatedPerson : person));
